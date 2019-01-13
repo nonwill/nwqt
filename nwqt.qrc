@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/imtitlebar">
+        <file alias="close">res/titlebar/tbn_close.png</file>
+        <file alias="max">res/titlebar/tbn_max.png</file>
+        <file alias="nor">res/titlebar/tbn_normal.png</file>
+        <file alias="min">res/titlebar/tbn_min.png</file>
+        <file alias="default">res/titlebar/default.png</file>
+    </qresource>
+</RCC>
