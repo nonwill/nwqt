@@ -6,7 +6,7 @@
 #define NWQ_DEFAULT_LANG "en_US"
 
 QStringList                 NWQAppGui::_transPaths;
-NWQAppGui::Translators       NWQAppGui::_transCells;
+NWQAppGui::Translators      NWQAppGui::_transCells;
 
 NWQAppGui::NWQAppGui(int& argc, char** argv) : QApplication(argc, argv), _nativeEvFilter(0)
 {

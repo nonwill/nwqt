@@ -20,19 +20,20 @@
 
 #define AVAILABLEGEOMETRY_SIZE (QApplication::desktop()->availableGeometry().size())
 
-enum WINDOW_POS
-{
-    WP_NORMAL = 0,
-    WP_LEFT = 1,
-    WP_RIGHT = 2,
-    WP_TOP = 4,
-    WP_BOTTOM = 8,
-    WP_HIDDEN = 16,
-};
 
 class NWQWidget::NWQWidgetPriData
 {
 public:
+    typedef uint8_t WidgetPos;
+    enum WIDGET_POS : WidgetPos
+    {
+        WP_NORMAL = 0,
+        WP_LEFT = 1,
+        WP_RIGHT = 2,
+        WP_TOP = 4,
+        WP_BOTTOM = 8,
+        WP_HIDDEN = 16,
+    };
 #ifndef QWIDGETRESIZEHANDLER_AVAILABLE
     typedef uint8_t GeometryStats;
     enum GeometryStat : GeometryStats
@@ -59,12 +60,12 @@ public:
     NWQTitleBar* titleBar;
     QWidget* contentWidget;
     QRect geometry;
+    int overTimeAutoHide;
+    WidgetPos positionState;
     bool minimizeToHide;
     bool autoHide;
     bool enableAutoHide;
     bool hideDelayed;
-    unsigned int positionState;
-    int overTimeAutoHide;
 
 public:
     NWQWidgetPriData() ;
@@ -95,8 +96,8 @@ NWQWidget::NWQWidgetPriData::~NWQWidgetPriData()
 {
 }
 
-bool NWQWidget::isImHidden() const  {        return (priData->positionState & WP_HIDDEN);    }
-bool NWQWidget::canImHidden() const    {        return (priData->positionState != WP_NORMAL);    }
+bool NWQWidget::isImHidden() const  {        return (priData->positionState & NWQWidgetPriData::WP_HIDDEN);    }
+bool NWQWidget::canImHidden() const    {        return (priData->positionState != NWQWidgetPriData::WP_NORMAL);    }
 bool NWQWidget::isAutoHide() const    {        return priData->autoHide;    }
 NWQTitleBar* NWQWidget::titleBar()    {        return priData->titleBar;    }
 QWidget* NWQWidget::contentWidget()    {        return priData->contentWidget;    }
@@ -522,15 +523,15 @@ void NWQWidget::updateWindowPositionType()
 {
     const QRect& rect = this->geometry();
     if (rect.top() <= 0)
-        priData->positionState = WP_TOP;
+        priData->positionState = NWQWidgetPriData::WP_TOP;
     else if (rect.bottom() >= QApplication::desktop()->height())
-        priData->positionState = WP_BOTTOM;
+        priData->positionState = NWQWidgetPriData::WP_BOTTOM;
     else if (rect.left() <= 0)
-        priData->positionState = WP_LEFT;
+        priData->positionState = NWQWidgetPriData::WP_LEFT;
     else if (rect.right() >=  QApplication::desktop()->width())
-        priData->positionState = WP_RIGHT;
+        priData->positionState = NWQWidgetPriData::WP_RIGHT;
     else
-        priData->positionState = WP_NORMAL;
+        priData->positionState = NWQWidgetPriData::WP_NORMAL;
 }
 
 void NWQWidget::menuJoined(QMenu* menu)
@@ -628,7 +629,7 @@ void NWQWidget::beginAutoHide()
 
     updateWindowPositionType();
     const QRect& rect = this->geometry();
-    if (priData->positionState == WP_TOP || priData->positionState == WP_BOTTOM)
+    if (priData->positionState == NWQWidgetPriData::WP_TOP || priData->positionState == NWQWidgetPriData::WP_BOTTOM)
     {
         int hold_x = 0;
         if (rect.left() < 0)
@@ -637,37 +638,37 @@ void NWQWidget::beginAutoHide()
             hold_x =  QApplication::desktop()->width() - rect.width();
         else
             hold_x = rect.x();
-        move(hold_x, priData->positionState == WP_TOP ? (-rect.height() + NWQCommon::imWidgetMargin) : (QApplication::desktop()->height() - NWQCommon::imWidgetMargin));
+        move(hold_x, priData->positionState == NWQWidgetPriData::WP_TOP ? (-rect.height() + NWQCommon::imWidgetMargin) : (QApplication::desktop()->height() - NWQCommon::imWidgetMargin));
     }
-    else if (priData->positionState == WP_LEFT)
+    else if (priData->positionState == NWQWidgetPriData::WP_LEFT)
         move(-rect.width() + NWQCommon::imWidgetMargin, rect.y());
-    else if (priData->positionState == WP_RIGHT)
+    else if (priData->positionState == NWQWidgetPriData::WP_RIGHT)
         move(QApplication::desktop()->width() - NWQCommon::imWidgetMargin, rect.y());
     else
         return;
 
-    priData->positionState |= WP_HIDDEN;
+    priData->positionState |= NWQWidgetPriData::WP_HIDDEN;
 }
 
 void NWQWidget::endAutoHide()
 {
     if (priData->titleBar->systemTitlebarUsed())
         return;
-    if (!priData->enableAutoHide || priData->hideDelayed || (priData->positionState == WP_NORMAL))
+    if (!priData->enableAutoHide || priData->hideDelayed || (priData->positionState == NWQWidgetPriData::WP_NORMAL))
         return;
 
     const QRect& rect = geometry();
     if (rect.isNull())
         return;
 
-    priData->positionState ^= (unsigned int)(WP_HIDDEN);
-    if (priData->positionState == WP_TOP)
+    priData->positionState ^= NWQWidgetPriData::WP_HIDDEN;
+    if (priData->positionState == NWQWidgetPriData::WP_TOP)
         move(rect.x(), -NWQCommon::imWidgetMargin);
-    else if (priData->positionState == WP_BOTTOM)
+    else if (priData->positionState == NWQWidgetPriData::WP_BOTTOM)
         move(rect.x(), QApplication::desktop()->height() - rect.height() + NWQCommon::imWidgetMargin);
-    else if (priData->positionState == WP_LEFT)
+    else if (priData->positionState == NWQWidgetPriData::WP_LEFT)
         move(-NWQCommon::imWidgetMargin, rect.y());
-    else if (priData->positionState == WP_RIGHT)
+    else if (priData->positionState == NWQWidgetPriData::WP_RIGHT)
         move(QApplication::desktop()->width() - rect.width() + NWQCommon::imWidgetMargin, rect.y());
 }
 
