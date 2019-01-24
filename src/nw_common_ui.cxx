@@ -31,8 +31,8 @@ void NWQSysLabel::paintEvent(QPaintEvent*)
 NWQSysIconBtn::NWQSysIconBtn(QWidget* parent) : QPushButton(parent)
 {
     setFlat(true);
-    setStyleSheet("QPushButton::menu-indicator{image:none;}"
-                  "QPushButton {border:0px;}");
+    setStyleSheet("QPushButton {border:0px;}"
+                  "QPushButton::menu-indicator{image:none;}");
 }
 
 NWQSysIconBtn::~NWQSysIconBtn()
@@ -42,7 +42,7 @@ NWQSysBtn::NWQSysBtn(QWidget* parent) : QToolButton(parent)
 {
     setPopupMode(QToolButton::InstantPopup);
     setToolButtonStyle(Qt::ToolButtonIconOnly);
-    setStyleSheet("background:transparent;");
+    setStyleSheet("QToolButton {background:transparent;}");
 }
 NWQSysBtn::~NWQSysBtn()
 {}

@@ -6,7 +6,7 @@
     <message>
         <location filename="nw_titlebar.cxx" line="274"/>
         <source>Minimize</source>
-        <translation type="unfinished">最小化</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="nw_titlebar.cxx" line="276"/>
@@ -30,7 +30,7 @@
         <location filename="nw_widget.cxx" line="481"/>
         <location filename="nw_widget.cxx" line="756"/>
         <source>Nomal</source>
-        <translation type="unfinished">还原</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="nw_widget.cxx" line="488"/>
