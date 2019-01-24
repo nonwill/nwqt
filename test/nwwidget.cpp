@@ -1,8 +1,12 @@
 #include "nw_widget.h"
 #include "nw_titlebar.h"
 #include "nw_application.h"
+//#include "eventdispatcher_libuv.h"
+//#include "uv.h"
 int main(int argc, char* argv[])
 {
+//    LIBUV_QAPP(a, argc, argv);
+
     NWQAppGui a(argc, argv);
     NWQWidget w ;
     w.setToplevel();
@@ -12,5 +16,6 @@ int main(int argc, char* argv[])
     w.setAutoHide();
     w.show();
     w.titleBar()->enableBtn(NWQTitleBar::BTN_MIN, false);
+    //uv_run(loop, UV_RUN_DEFAULT);
     return a.exec();
 }
