@@ -31,7 +31,7 @@ void NWQSysLabel::paintEvent(QPaintEvent*)
 NWQSysIconBtn::NWQSysIconBtn(QWidget* parent) : QPushButton(parent)
 {
     setFlat(true);
-    setStyleSheet("QPushButton {border:0px;}"
+    setStyleSheet("QPushButton{border:0px;}"
                   "QPushButton::menu-indicator{image:none;}");
 }
 
@@ -42,7 +42,7 @@ NWQSysBtn::NWQSysBtn(QWidget* parent) : QToolButton(parent)
 {
     setPopupMode(QToolButton::InstantPopup);
     setToolButtonStyle(Qt::ToolButtonIconOnly);
-    setStyleSheet("QToolButton {background:transparent;}");
+    setStyleSheet("QToolButton{background:transparent;}");
 }
 NWQSysBtn::~NWQSysBtn()
 {}
@@ -78,9 +78,9 @@ void NWQSysBarBtn::dynamStyle(int event_type)
     case QEvent::WindowActivate:
     {
         const QString style("" //不显示下拉图片
-                            "QToolButton {background-color:transparent;border:0px;}" // 按键本色
-                            "QToolButton:hover{background-color:%1;border-style: outset;}"
-                            "QToolButton:pressed{ background-color:%3; border-style: outset; }");
+                            "QToolButton{background-color:transparent;border:0px;}" // 按键本色
+                            "QToolButton:hover{background-color:%1;border-style:outset;}"
+                            "QToolButton:pressed{background-color:%3;border-style:outset;}");
         const QColor& bgcolor = NWQCommon::BGColor(isActiveWindow());
         setStyleSheet(style.arg(bgcolor.lighter(110).name()).arg(bgcolor.darker(110).name()));
         break;
