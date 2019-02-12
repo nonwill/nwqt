@@ -106,9 +106,9 @@ void NWQWidget::setContentsMargins(int left, int top, int right, int bottom)
     priData->contentWidget->setContentsMargins(left, top, right, bottom);
 }
 
-const Qt::WindowFlags flag = (Qt::Window | Qt::FramelessWindowHint |
-                              Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
-NWQWidget::NWQWidget(/*QWidget* parent*/) : QWidget(0/*parent*/, flag), priData(new NWQWidgetPriData())
+const Qt::WindowFlags gwFlag = (Qt::Window | Qt::FramelessWindowHint |
+                                Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
+NWQWidget::NWQWidget(/*QWidget* parent*/) : QWidget(0/*parent*/, gwFlag), priData(new NWQWidgetPriData())
 {
     /*
      ___________________________________________________
@@ -166,8 +166,8 @@ void NWQWidget::setSystemTitleBar(bool flag)
         priData->widgetResizeHandler->setMovingEnabled(false);
 #endif
         setWindowFlags(windowFlags() ^ Qt::FramelessWindowHint);
-        //setWindowFlags(windowFlags() ^ Qt::WindowSystemMenuHint);
-        //setWindowFlags(windowFlags() ^ Qt::WindowMinMaxButtonsHint);
+//        setWindowFlags(windowFlags() ^ Qt::WindowSystemMenuHint);
+//        setWindowFlags(windowFlags() ^ Qt::WindowMinMaxButtonsHint);
         if (priData->autoHide)
             enableAutoHide(false);
     }
@@ -177,9 +177,7 @@ void NWQWidget::setSystemTitleBar(bool flag)
 #ifdef QWIDGETRESIZEHANDLER_AVAILABLE
         priData->widgetResizeHandler->setMovingEnabled(true);
 #endif
-        setWindowFlags(Qt::Window | Qt::FramelessWindowHint
-                       | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
-
+        setWindowFlags(gwFlag);
         if (priData->autoHide)
             enableAutoHide(true);
     }

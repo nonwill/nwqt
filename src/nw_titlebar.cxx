@@ -180,7 +180,7 @@ bool NWQTitleBar::systemTitlebarUsed()
 
 void NWQTitleBar::adjustBar()
 {
-    if (systemTitlebarUsed())
+    if (priData->isSysTitleBarUsed/*systemTitlebarUsed()*/)
     {
         if (priData->userToolbarHL_L->count() > 1 ||
             priData->userToolbarHL_R->count() > 1 ||
