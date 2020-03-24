@@ -151,7 +151,7 @@ NWQWidget::~NWQWidget()
 {
     delete priData;
 }
-
+//#include <QDebug>
 void NWQWidget::setSystemTitleBar(bool flag)
 {
     const bool isvisible = isVisible();
@@ -159,13 +159,16 @@ void NWQWidget::setSystemTitleBar(bool flag)
         return;
 
     priData->titleBar->useSystemTitlebar(flag);
+//    qDebug() << "flag:" << flag;
+//    qDebug() << "Last:" << windowFlags();
     if (flag)
     {
         QWidget::setContentsMargins(0, 0, 0, 0);
 #ifdef QWIDGETRESIZEHANDLER_AVAILABLE
         priData->widgetResizeHandler->setMovingEnabled(false);
 #endif
-        setWindowFlags(windowFlags() ^ Qt::FramelessWindowHint);
+        setWindowFlags((windowFlags() ^ gwFlag));
+//        setWindowFlags(windowFlags() ^ Qt::FramelessWindowHint);
 //        setWindowFlags(windowFlags() ^ Qt::WindowSystemMenuHint);
 //        setWindowFlags(windowFlags() ^ Qt::WindowMinMaxButtonsHint);
         if (priData->autoHide)
@@ -181,7 +184,7 @@ void NWQWidget::setSystemTitleBar(bool flag)
         if (priData->autoHide)
             enableAutoHide(true);
     }
-
+//    qDebug() << "Now :" << windowFlags();
     if (isvisible)
     {
         showNormal();

@@ -5,6 +5,7 @@ QT += core gui
 TEMPLATE = app
 TARGET = nwwidget
 
+include($$PWD/../../nwDeployed/nwDeployed.pri)
 include($${PWD}/../nwqt.pri)
 
 SOURCES += \

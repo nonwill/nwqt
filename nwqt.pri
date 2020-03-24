@@ -1,25 +1,7 @@
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-    TARGET_ARCH=$${QT_ARCH}
-} else {
-    TARGET_ARCH=$${QMAKE_HOST.arch}
-}
-contains(TARGET_ARCH, x86_64) {
-    ARCHITECTURE = x64
-} else {
-    ARCHITECTURE = x86
-}
-
 NWQT_PVER_FIX=$${QT_MAJOR_VERSION}_$${ARCHITECTURE}
 isEmpty(CUR_PRJ_DIR):CUR_PRJ_DIR = $$PWD/..
 #message("CUR_PRJ_DIR = $${CUR_PRJ_DIR}" )
-contains(TEMPLATE,lib) {
-    DESTDIR = $${CUR_PRJ_DIR}/lib$${NWQT_PVER_FIX}
-    DLLDESTDIR = $${CUR_PRJ_DIR}/bin$${NWQT_PVER_FIX}
-} else {
-    DESTDIR = $${CUR_PRJ_DIR}/bin$${NWQT_PVER_FIX}
-}
-LIBS += -L$${PWD}/../lib$${NWQT_PVER_FIX}
 
 contains(QT, gui) {
     greaterThan(QT_MAJOR_VERSION, 4):QT += widgets
@@ -32,29 +14,35 @@ contains(QT, gui) {
             INCLUDEPATH += $$PWD/3rdParty/qjson4
         }
     }
-#    DEFINES += FONTAWESOME_LIB=Q_DECL_IMPORT
-#    INCLUDEPATH += $$PWD/3rdParty/QtAwesome
-#    INCLUDEPATH += $$PWD/3rdParty/qt_eventdispatcher_libuv/src \
-#                   $$PWD/3rdParty/qt_eventdispatcher_libuv/src-gui
-#    DEFINES += QLIBUV_LIB=Q_DECL_IMPORT
-#    INCLUDEPATH += $$PWD/3rdParty/libuv/include
-#    LIBS += -L$$PWD/3rdParty/libuv/lib -luv
-#    win32:win32-g++:LIBS += -lmswsock
-#    win32:LIBS += -luserenv -lws2_32 -lpsapi -liphlpapi
 }
 
-contains(CONFIG,using_openssl){
-    equals(ARCHITECTURE,x64) {
-        INCLUDEPATH += $$(OPENSSL_DIR)/include64
-        LIBS += -L$$(OPENSSL_DIR)/lib64
-    } else {
-        INCLUDEPATH += $$(OPENSSL_DIR)/include
-        LIBS += -L$$(OPENSSL_DIR)/lib
-    }
-    TARGET_OS=$$(MSYSTEM)
-    isEmpty(TARGET_OS) {
-        win32:LIBS += -llibeay32
-    }else{
-        LIBS += -lcrypto
-    }
+# This makes qmake generate translations
+
+win32:# Windows doesn't seem to have *-qt4 symlinks
+isEmpty(QMAKE_LRELEASE):QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+isEmpty(QMAKE_LRELEASE):QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease-qt4
+
+# The *.qm files might not exist when qmake is run for the first time,
+# causing the standard install rule to be ignored, and no translations
+# will be installed. With this, we create the qm files during qmake run.
+!win32 {
+  system($${QMAKE_LRELEASE} -silent $${_PRO_FILE_} 2> /dev/null)
 }
+updateqm.input = TRANSLATIONS
+updateqm.output = ${QMAKE_FILE_BASE}.qm
+contains(TEMPLATE,lib) {
+updateqm.commands = $$QMAKE_LRELEASE \
+    ${QMAKE_FILE_IN} \
+    -qm \
+    $$DLLDESTDIR/lang/$$TARGET/${QMAKE_FILE_OUT}
+} else {
+updateqm.commands = $$QMAKE_LRELEASE \
+    ${QMAKE_FILE_IN} \
+    -qm \
+    $$DESTDIR/lang/$$TARGET/${QMAKE_FILE_OUT}
+}
+updateqm.CONFIG += no_link
+QMAKE_EXTRA_COMPILERS += updateqm
+TS_OUT = $$TRANSLATIONS
+TS_OUT ~= s/.ts/.qm/g
+PRE_TARGETDEPS += $$TS_OUT

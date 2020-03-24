@@ -30,7 +30,6 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 DEFINES -= QWIDGETRESIZEHANDLER_AVAILABLE
 
-include($$PWD/../nwqt.pri)
 
 SOURCES += \
 #    im_systemtray.cxx \
@@ -53,3 +52,6 @@ HEADERS += \
 TRANSLATIONS += en_US.ts zh_CN.ts
 
 RESOURCES += $${PWD}/../nwqt.qrc
+
+include($$PWD/../../nwDeployed/nwDeployed.pri)
+include($$PWD/../nwqt.pri)

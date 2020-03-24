@@ -5,6 +5,7 @@ QT += core gui
 TEMPLATE = app
 TARGET = nww_login
 
+include($$PWD/../../nwDeployed/nwDeployed.pri)
 include($${PWD}/../nwqt.pri)
 
 HEADERS += \

@@ -9,6 +9,8 @@ int main(int argc, char* argv[])
 
     NWQAppGui a(argc, argv);
     NWQWidget w ;
+    QString title("标题");
+    w.setWindowTitle(title);
     w.setToplevel();
     w.resize(300, 500);
     //w.setMinimumSize(200, 100);
